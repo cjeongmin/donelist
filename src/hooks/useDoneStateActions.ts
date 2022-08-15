@@ -43,7 +43,9 @@ export default function useDoneStateActions() {
 
   const remove = useCallback(
     (key: number) => {
-      setDoneList(doneList.filter((doneItem) => doneItem.key !== key));
+      const filterd = doneList.filter((doneItem) => doneItem.key !== key);
+      setDoneList(filterd);
+      localStorage.setItem("donelist", JSON.stringify(filterd));
     },
     [doneList, setDoneList]
   );

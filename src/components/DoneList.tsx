@@ -1,24 +1,51 @@
 import styled from "styled-components";
-import useDoneList from "../hooks/useDoneList";
+import useDoneListActions from "../hooks/useDoneStateActions";
 
-const styles = {
+const Styles = {
   DoneList: styled.div`
+    box-sizing: border-box;
     height: 90%;
     width: 100%;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: hidden;
+
+    :hover {
+      overflow-y: auto;
+    }
+
+    .empty {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #888888;
+    }
   `,
 
-  DoneItem: styled.div<{ isEven: boolean; marginBottom: boolean }>`
+  DoneItem: styled.div<{ marginBottom: boolean }>`
+    box-sizing: border-box;
     width: 95%;
     height: 10%;
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    min-height: 50px;
+
+    padding: 0.5%;
+    border-color: rgba(100, 100, 111, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 6px;
 
     margin-bottom: ${(props) => (props.marginBottom ? "0.5%" : "0%")};
-    background-color: ${(props) => (props.isEven ? "#e0f2f1" : "#ffffff")};
+    background-color: #fdfdfd;
+    transition: transform 0.25s, margin-top 0.25s, margin-bottom 0.25s;
+
+    :hover {
+      margin-top: 1%;
+      margin-bottom: 1%;
+      transform: scale(1.01);
+    }
 
     .date {
       color: #888888;
@@ -34,37 +61,38 @@ const styles = {
 function DoneItem({
   date,
   content,
-  isEven = false,
   marginBottom = true,
 }: {
   date: Date;
   content: string;
-  isEven?: boolean;
   marginBottom?: boolean;
 }) {
   return (
-    <styles.DoneItem isEven={isEven} marginBottom={marginBottom}>
+    <Styles.DoneItem marginBottom={marginBottom}>
       <div className="date">{date.toLocaleString()}</div>
       <div className="content">{content}</div>
-    </styles.DoneItem>
+    </Styles.DoneItem>
   );
 }
 
-export default function DoneList({ date }: { date?: Date }) {
-  const doneList = useDoneList();
+export default function DoneList({ date }: { date: Date }) {
+  const { find } = useDoneListActions();
+  const doneList = find(date);
 
   return (
-    <styles.DoneList>
-      {doneList.length &&
+    <Styles.DoneList>
+      {doneList.length ? (
         doneList.map((doneItem) => (
           <DoneItem
             date={doneItem.date}
             content={doneItem.content}
             key={doneItem.key}
-            isEven={doneItem.key % 2 === 0}
             marginBottom={doneItem.key !== doneList[doneList.length - 1].key}
           />
-        ))}
-    </styles.DoneList>
+        ))
+      ) : (
+        <div className="empty">완료한 일이 없습니다.</div>
+      )}
+    </Styles.DoneList>
   );
 }

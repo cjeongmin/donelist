@@ -1,8 +1,6 @@
 import { useRecoilValue } from "recoil";
 import doneState from "../atoms/doneState";
 
-export default function useDoneList() {
+export default function useDoneState() {
   return useRecoilValue(doneState);
 }
-
-export function useDoneListFindByDate({ date }: { date: Date }) {}

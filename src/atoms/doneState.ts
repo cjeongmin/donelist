@@ -15,24 +15,7 @@ export interface DoneItem {
 
 const doneState = atom<DoneItem[]>({
   key: "doneState",
-  default: [
-    { key: 1, date: new Date(), content: "content1" },
-    {
-      key: 2,
-      date: new Date(Date.now() + 1000 * 60 * 60),
-      content: "content2",
-    },
-    {
-      key: 3,
-      date: new Date(Date.now() + 1000 * 60 * 60 * 2),
-      content: "content3",
-    },
-    {
-      key: 4,
-      date: new Date(Date.now() + 1000 * 60 * 60 * 3),
-      content: "content4",
-    },
-  ],
+  default: [],
 });
 
 /* 다음 추가될 항목의 키값을 반환한다. */

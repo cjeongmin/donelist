@@ -17,6 +17,16 @@ export default function useDoneStateActions() {
             key: nextId,
           })
         );
+        localStorage.setItem(
+          "donelist",
+          JSON.stringify(
+            doneList.concat({
+              date,
+              content,
+              key: nextId,
+            })
+          )
+        );
       },
     [setDoneList]
   );
@@ -31,5 +41,12 @@ export default function useDoneStateActions() {
     [doneList]
   );
 
-  return useMemo(() => ({ add, find }), [add, find]);
+  const remove = useCallback(
+    (key: number) => {
+      setDoneList(doneList.filter((doneItem) => doneItem.key !== key));
+    },
+    [doneList, setDoneList]
+  );
+
+  return useMemo(() => ({ add, find, remove }), [add, find, remove]);
 }

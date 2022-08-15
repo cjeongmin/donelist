@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import useDoneListActions from "../hooks/useDoneStateActions";
 
@@ -50,10 +51,10 @@ const Styles = {
     .date {
       color: #888888;
       font-size: 0.25rem;
-      margin-bottom: 0.1%;
+      margin-bottom: 1%;
     }
     .content {
-      font-size: 1rem;
+      font-size: 0.8rem;
     }
   `,
 };
@@ -62,13 +63,15 @@ function DoneItem({
   date,
   content,
   marginBottom = true,
+  onRemove,
 }: {
   date: Date;
   content: string;
   marginBottom?: boolean;
+  onRemove: (event: React.MouseEvent<HTMLDivElement>) => void;
 }) {
   return (
-    <Styles.DoneItem marginBottom={marginBottom}>
+    <Styles.DoneItem marginBottom={marginBottom} onClick={onRemove}>
       <div className="date">{date.toLocaleString()}</div>
       <div className="content">{content}</div>
     </Styles.DoneItem>
@@ -76,7 +79,8 @@ function DoneItem({
 }
 
 export default function DoneList({ date }: { date: Date }) {
-  const { find } = useDoneListActions();
+  const { find, remove } = useDoneListActions();
+
   const doneList = find(date);
 
   return (
@@ -88,6 +92,9 @@ export default function DoneList({ date }: { date: Date }) {
             content={doneItem.content}
             key={doneItem.key}
             marginBottom={doneItem.key !== doneList[doneList.length - 1].key}
+            onRemove={(event) => {
+              remove(doneItem.key);
+            }}
           />
         ))
       ) : (

@@ -1,6 +1,6 @@
-import React from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import useDoneListActions from "../hooks/useDoneStateActions";
+import { activatedSelector } from "../atoms/modalState";
 
 const Styles = {
   AddButton: styled.button`
@@ -36,10 +36,10 @@ const Styles = {
   `,
 };
 
-export default function AddButton({
-  onClick,
-}: {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}) {
+export default function AddButton() {
+  const [activated, setActivated] = useRecoilState(activatedSelector);
+  const onClick = () => {
+    setActivated(!activated);
+  };
   return <Styles.AddButton onClick={onClick}>+</Styles.AddButton>;
 }

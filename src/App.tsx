@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { RecoilRoot } from "recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import doneState, { DoneItem } from "./atoms/doneState";
 import AddButton from "./components/AddButton";
 import DoneList from "./components/DoneList";
 import { Modal } from "./components/Modal";
@@ -57,28 +58,33 @@ const Styles = {
 
 function App() {
   const [date, setDate] = useState(new Date());
-  const [activated, setActivated] = useState(false);
+  const setDoneList = useSetRecoilState(doneState);
+
+  useEffect(() => {
+    const data = localStorage.getItem("donelist");
+    if (data === null) {
+      setDoneList([]);
+    } else {
+      const parsed = Array.from(JSON.parse(data)) as DoneItem[];
+      setDoneList(
+        parsed.map((item) => ({ ...item, date: new Date(item.date) }))
+      );
+    }
+  }, []);
 
   return (
-    <RecoilRoot>
-      <Styles.App>
-        {activated && <Modal visible={activated} />}
-        <Calendar
-          calendarType="US"
-          formatDay={(locale, date) => date.getDate().toString()}
-          value={date}
-          onChange={setDate}
-        />
-        <Styles.Separator />
-        <DoneList date={date} />
-        <AddButton
-          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-            event.preventDefault();
-            setActivated(!activated);
-          }}
-        />
-      </Styles.App>
-    </RecoilRoot>
+    <Styles.App>
+      <Modal />
+      <Calendar
+        calendarType="US"
+        formatDay={(locale, date) => date.getDate().toString()}
+        value={date}
+        onChange={setDate}
+      />
+      <Styles.Separator />
+      <DoneList date={date} />
+      <AddButton />
+    </Styles.App>
   );
 }
 

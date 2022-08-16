@@ -24,9 +24,15 @@ const Styles = {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 50%;
+    width: 100%;
     height: 25%;
+    max-width: 500px;
     transform: translate(-50%, -50%);
+
+    @media (max-width: 500px) {
+      height: 25%;
+      width: 80%;
+    }
 
     display: flex;
     flex-direction: column;

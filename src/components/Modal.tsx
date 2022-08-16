@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { activatedSelector, contentSelector } from "../atoms/modalState";
@@ -106,25 +106,49 @@ export function Modal() {
   const { add } = useDoneStateActions();
   const [activated, setActivated] = useRecoilState(activatedSelector);
   const [content, setContent] = useRecoilState(contentSelector);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  const shakingAnimate = () => {
+    if (bodyRef.current === null) {
+      return;
+    }
+    bodyRef.current.animate(
+      {
+        transform: [
+          "translate(-49%, -50%)",
+          "translate(-51%, -50%)",
+          "translate(-50%, -50%)",
+        ],
+      },
+      {
+        duration: 200,
+        easing: "ease-in-out",
+      }
+    );
+  };
 
   const onCancel = () => {
     setActivated(!activated);
     setContent("");
   };
+
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(event.target.value);
   };
+
   const addDoneItem = () => {
-    if (content !== "") {
-      add(new Date(), content);
+    if (content === "") {
+      shakingAnimate();
+      return;
     }
+    add(new Date(), content);
     setActivated(!activated);
     setContent("");
   };
 
   return (
     <Styles.Modal visible={activated}>
-      <Styles.Body>
+      <Styles.Body ref={bodyRef}>
         <Styles.Title>항목 추가하기</Styles.Title>
         <Styles.Separator />
         <Styles.Input

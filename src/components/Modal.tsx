@@ -45,12 +45,18 @@ const Styles = {
     text-align: center;
   `,
 
-  Separator: styled.div`
+  HorizontalSeparator: styled.div`
     box-sizing: border-box;
     width: 100%;
     height: 0.25%;
     background-color: rgba(100, 100, 111, 0.2);
-    margin: 1% 0% 1% 0%;
+    margin-top: 1%;
+  `,
+
+  VerticalSeparator: styled.div`
+    box-sizing: border-box;
+    width: 0.25%;
+    background-color: rgba(100, 100, 111, 0.2);
   `,
 
   Input: styled.textarea`
@@ -150,15 +156,16 @@ export function Modal() {
     <Styles.Modal visible={activated}>
       <Styles.Body ref={bodyRef}>
         <Styles.Title>항목 추가하기</Styles.Title>
-        <Styles.Separator />
+        <Styles.HorizontalSeparator />
         <Styles.Input
           placeholder="내용을 입력해주세요"
           value={content}
           onChange={onChange}
         />
-        <Styles.Separator />
+        <Styles.HorizontalSeparator />
         <Styles.Buttons>
           <Styles.Button onClick={addDoneItem}>확인</Styles.Button>
+          <Styles.VerticalSeparator />
           <Styles.Button onClick={onCancel}>취소</Styles.Button>
         </Styles.Buttons>
       </Styles.Body>
